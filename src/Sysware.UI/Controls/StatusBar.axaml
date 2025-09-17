@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Sysware.UI.ViewModels"
+             x:Class="Sysware.UI.Controls.StatusBar"
+             x:DataType="vm:MainWindowViewModel">
+    
+    <Border Background="#E5E5E5" 
+            BorderBrush="#CCCCCC" 
+            BorderThickness="0,1,0,0"
+            Padding="10,5">
+        <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Grid.Column="0" 
+                       Text="准备就绪" 
+                       FontSize="12" 
+                       Foreground="Gray"/>
+            <TextBlock Grid.Column="1" 
+                       Text="{Binding CurrentTime}" 
+                       FontSize="12" 
+                       Foreground="Gray"/>
+        </Grid>
+    </Border>
+    
+</UserControl>

@@ -1,0 +1,73 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Sysware.UI.ViewModels"
+             x:Class="Sysware.UI.Controls.MainContentArea"
+             x:DataType="vm:MainWindowViewModel">
+    
+    <Grid RowDefinitions="Auto,*">
+        <!-- 内容区域标题栏 -->
+        <Border Grid.Row="0" 
+                Background="#F8F8F8" 
+                BorderBrush="#CCCCCC" 
+                BorderThickness="0,0,0,1"
+                Padding="15,10">
+            <TextBlock Text="{Binding ContentTitle}" 
+                       FontWeight="Bold" 
+                       FontSize="16"/>
+        </Border>
+        
+        <!-- 主内容 -->
+        <ScrollViewer Grid.Row="1" 
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Auto">
+            <StackPanel Margin="20" Spacing="15">
+                <!-- 欢迎信息 -->
+                <TextBlock Text="欢迎使用 Sysware.ModSim！" 
+                           FontSize="24" 
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"/>
+                
+                <TextBlock Text="这是一个基于 Avalonia UI 的跨平台桌面应用程序，专为信创环境设计。" 
+                           FontSize="14" 
+                           Foreground="Gray"
+                           HorizontalAlignment="Center"
+                           TextWrapping="Wrap"/>
+                
+                <!-- 功能按钮区域 -->
+                <StackPanel Orientation="Horizontal" 
+                            HorizontalAlignment="Center" 
+                            Spacing="15" 
+                            Margin="0,20">
+                    <Button Content="点击我" 
+                            Command="{Binding ClickCommand}"
+                            Padding="20,10"
+                            Background="#0078D4"
+                            Foreground="White"/>
+                    <Button Content="重置计数" 
+                            Command="{Binding ResetCommand}"
+                            Padding="20,10"
+                            Background="#107C10"
+                            Foreground="White"/>
+                </StackPanel>
+
+                <!-- 状态显示区域 -->
+                <Border Background="#F5F5F5" 
+                        CornerRadius="8" 
+                        Padding="20">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="应用状态" 
+                                   FontSize="16" 
+                                   FontWeight="Bold"/>
+                        <TextBlock Text="{Binding ClickCount, StringFormat='点击次数: {0}'}" 
+                                   FontSize="14"/>
+                        <TextBlock Text="{Binding CurrentTime, StringFormat='当前时间: {0}'}" 
+                                   FontSize="14"/>
+                        <TextBlock Text="{Binding PlatformInfo, StringFormat='运行平台: {0}'}" 
+                                   FontSize="14"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+    
+</UserControl>

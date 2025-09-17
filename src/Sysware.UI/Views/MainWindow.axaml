@@ -1,0 +1,35 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Sysware.UI.ViewModels"
+        xmlns:controls="using:Sysware.UI.Controls"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+        x:Class="Sysware.UI.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="Sysware.ModSim - 信创桌面应用"
+        Width="1200" Height="800"
+        MinWidth="800" MinHeight="600">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+        <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Ribbon界面 -->
+        <controls:RibbonBar Grid.Row="0" DataContext="{Binding}"/>
+
+        <!-- 主内容区域 -->
+        <Grid Grid.Row="1" ColumnDefinitions="250,*">
+            <!-- 左侧导航面板 -->
+            <controls:NavigationPanel Grid.Column="0" DataContext="{Binding}"/>
+
+            <!-- 右侧主内容区域 -->
+            <controls:MainContentArea Grid.Column="1" DataContext="{Binding}"/>
+        </Grid>
+
+        <!-- 底部状态栏 -->
+        <controls:StatusBar Grid.Row="2" DataContext="{Binding}"/>
+    </Grid>
+
+</Window>

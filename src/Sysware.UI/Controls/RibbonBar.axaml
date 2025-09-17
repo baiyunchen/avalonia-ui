@@ -1,0 +1,367 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Sysware.UI.ViewModels"
+             xmlns:svg="clr-namespace:Avalonia.Svg.Skia;assembly=Avalonia.Svg.Skia"
+             x:Class="Sysware.UI.Controls.RibbonBar"
+             x:DataType="vm:MainWindowViewModel">
+
+    <UserControl.Styles>
+        <!-- Ribbon Tab Button Style -->
+        <Style Selector="Button.ribbon-tab">
+            <Setter Property="Background" Value="#E1E1E1"/>
+            <Setter Property="BorderBrush" Value="#ACACAC"/>
+            <Setter Property="BorderThickness" Value="1,1,1,0"/>
+            <Setter Property="Padding" Value="20,8,20,8"/>
+            <Setter Property="Margin" Value="0,0,2,0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="CornerRadius" Value="3,3,0,0"/>
+        </Style>
+        
+        <Style Selector="Button.ribbon-tab:pointerover">
+            <Setter Property="Background" Value="#F0F0F0"/>
+        </Style>
+        
+        <Style Selector="Button.ribbon-tab.active">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#ACACAC"/>
+            <Setter Property="BorderThickness" Value="1,1,1,0"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <!-- Global Menu Button Style -->
+        <Style Selector="Button.global-menu">
+            <Setter Property="Background" Value="#4472C4"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Width" Value="80"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="CornerRadius" Value="3"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+        </Style>
+        
+        <Style Selector="Button.global-menu:pointerover">
+            <Setter Property="Background" Value="#5B7BD5"/>
+        </Style>
+
+        <!-- Ribbon Group Style -->
+        <Style Selector="Border.ribbon-group">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#D4D4D4"/>
+            <Setter Property="BorderThickness" Value="0,0,1,0"/>
+            <Setter Property="Padding" Value="8,5,8,5"/>
+            <Setter Property="Margin" Value="0,0,5,0"/>
+        </Style>
+
+        <!-- Ribbon Button Styles -->
+        <Style Selector="Button.ribbon-large">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="7,3"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="CornerRadius" Value="3"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style Selector="Button.ribbon-large:pointerover">
+            <Setter Property="Background" Value="#E5F3FF"/>
+            <Setter Property="BorderBrush" Value="#CCE4F7"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <Style Selector="Button.ribbon-small">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="5,2"/>
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="CornerRadius" Value="2"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+        </Style>
+
+        <Style Selector="Button.ribbon-small:pointerover">
+            <Setter Property="Background" Value="#E5F3FF"/>
+            <Setter Property="BorderBrush" Value="#CCE4F7"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+    </UserControl.Styles>
+
+    <Grid>
+        <Border Background="#F1F1F1" BorderBrush="#ACACAC" BorderThickness="0,0,0,1">
+            <Grid RowDefinitions="Auto,Auto">
+            <!-- Ribbon Tabs -->
+            <Grid Grid.Row="0" Background="#E1E1E1" ColumnDefinitions="Auto,*">
+                <!-- Global Menu Button -->
+                <Button Grid.Column="0" Classes="global-menu" 
+                        Content="文件" 
+                        Click="GlobalMenuButton_Click"
+                        Name="GlobalMenuButton"/>
+
+                <!-- Tab Buttons -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="10,0,0,0">
+                    <Button Classes="ribbon-tab active" Content="开始" Click="TabButton_Click" Tag="Home" Name="HomeTab"/>
+                    <Button Classes="ribbon-tab" Content="常用建模" Click="TabButton_Click" Tag="Modeling" Name="ModelingTab"/>
+                    <Button Classes="ribbon-tab" Content="功能模型" Click="TabButton_Click" Tag="Functions" Name="FunctionsTab"/>
+                    <Button Classes="ribbon-tab" Content="设计模型" Click="TabButton_Click" Tag="Design" Name="DesignTab"/>
+                    <Button Classes="ribbon-tab" Content="虚实融合试验验证" Click="TabButton_Click" Tag="Testing" Name="TestingTab"/>
+                    <Button Classes="ribbon-tab" Content="模型库" Click="TabButton_Click" Tag="Library" Name="LibraryTab"/>
+                    <Button Classes="ribbon-tab" Content="平台管理" Click="TabButton_Click" Tag="Management" Name="ManagementTab"/>
+                    <Button Classes="ribbon-tab" Content="帮助" Click="TabButton_Click" Tag="Help" Name="HelpTab"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Ribbon Content Area -->
+            <Border Grid.Row="1" Classes="ribbon-content" Background="White" BorderBrush="#ACACAC" BorderThickness="1,0,1,1" Height="100">
+                <Grid>
+                    <!-- Home Tab Content -->
+                <ScrollViewer Name="HomeContent" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Border Classes="ribbon-group">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button Classes="ribbon-large" Height="70">
+                                        <StackPanel>
+                                            <svg:Svg Width="24" Height="24" HorizontalAlignment="Center" 
+                                                     Path="avares://Sysware.UI/Assets/Icons/undo.svg"/>
+                                            <TextBlock Text="上一步" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Classes="ribbon-large" Height="70" Margin="5,0,0,0">
+                                        <StackPanel>
+                                            <svg:Svg Width="24" Height="24" HorizontalAlignment="Center" 
+                                                     Path="avares://Sysware.UI/Assets/Icons/redo.svg"/>
+                                            <TextBlock Text="下一步" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                                <TextBlock Text="文件操作" FontSize="11" HorizontalAlignment="Center" Foreground="#666666" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Classes="ribbon-group">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button Classes="ribbon-large" Height="70" Margin="5,0,0,0">
+                                        <StackPanel>
+                                            <svg:Svg Width="24" Height="24" HorizontalAlignment="Center" 
+                                                     Path="avares://Sysware.UI/Assets/Icons/new.svg"/>
+                                            <TextBlock Text="新建" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Classes="ribbon-large" Height="70" Margin="5,0,0,0">
+                                        <StackPanel>
+                                             <svg:Svg Width="24" Height="24" HorizontalAlignment="Center" 
+                                                     Path="avares://Sysware.UI/Assets/Icons/open.svg"/>
+                                            <TextBlock Text="打开" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Classes="ribbon-large" Height="70" Margin="5,0,0,0">
+                                        <StackPanel>
+                                            <svg:Svg Width="24" Height="24" HorizontalAlignment="Center" 
+                                                     Path="avares://Sysware.UI/Assets/Icons/save.svg"/>
+                                            <TextBlock Text="保存" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Classes="ribbon-large" Height="70" Margin="5,0,0,0">
+                                        <StackPanel>
+                                            <svg:Svg Width="24" Height="24" HorizontalAlignment="Center" 
+                                                     Path="avares://Sysware.UI/Assets/Icons/save-as.svg"/>
+                                            <TextBlock Text="另存为" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                                <TextBlock Text="文件操作" FontSize="11" HorizontalAlignment="Center" Foreground="#666666" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Classes="ribbon-group">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button Classes="ribbon-large" Height="70" Margin="5,0,0,0">
+                                        <StackPanel>
+                                            <svg:Svg Width="24" Height="24" HorizontalAlignment="Center" 
+                                                     Path="avares://Sysware.UI/Assets/Icons/print.svg"/>
+                                            <TextBlock Text="打印" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Classes="ribbon-large" Height="70" Margin="5,0,0,0">
+                                        <StackPanel>
+                                            <svg:Svg Width="24" Height="24" HorizontalAlignment="Center" 
+                                                     Path="avares://Sysware.UI/Assets/Icons/print-preview.svg"/>
+                                            <TextBlock Text="打印预览" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Classes="ribbon-large" Height="70" Margin="5,0,0,0">
+                                        <StackPanel>
+                                            <svg:Svg Width="24" Height="24" HorizontalAlignment="Center" 
+                                                     Path="avares://Sysware.UI/Assets/Icons/exit.svg"/>
+                                            <TextBlock Text="退出" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                                <TextBlock Text="打印" FontSize="11" HorizontalAlignment="Center" Foreground="#666666" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- Other Tab Contents (Hidden by default) -->
+                <ScrollViewer Name="ModelingContent" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" IsVisible="False">
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Border Classes="ribbon-group">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button Classes="ribbon-large" Height="70">
+                                        <StackPanel>
+                                            <TextBlock Text="🔧" FontSize="24" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="基本模型" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Classes="ribbon-large" Height="70" Margin="5,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="⚙️" FontSize="24" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="复合模型" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                                <TextBlock Text="常用建模" FontSize="11" HorizontalAlignment="Center" Foreground="#666666" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <ScrollViewer Name="FunctionsContent" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" IsVisible="False">
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Border Classes="ribbon-group">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button Classes="ribbon-large" Height="70">
+                                        <StackPanel>
+                                            <TextBlock Text="🎯" FontSize="24" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="功能建模" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                                <TextBlock Text="功能模型" FontSize="11" HorizontalAlignment="Center" Foreground="#666666" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <ScrollViewer Name="DesignContent" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" IsVisible="False">
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Border Classes="ribbon-group">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button Classes="ribbon-large" Height="70">
+                                        <StackPanel>
+                                            <TextBlock Text="📐" FontSize="24" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="设计工具" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                                <TextBlock Text="设计模型" FontSize="11" HorizontalAlignment="Center" Foreground="#666666" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <ScrollViewer Name="TestingContent" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" IsVisible="False">
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Border Classes="ribbon-group">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button Classes="ribbon-large" Height="70">
+                                        <StackPanel>
+                                            <TextBlock Text="🧪" FontSize="24" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="试验验证" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                                <TextBlock Text="虚实融合试验验证" FontSize="11" HorizontalAlignment="Center" Foreground="#666666" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <ScrollViewer Name="LibraryContent" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" IsVisible="False">
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Border Classes="ribbon-group">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button Classes="ribbon-large" Height="70">
+                                        <StackPanel>
+                                            <TextBlock Text="📚" FontSize="24" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="模型库" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                                <TextBlock Text="模型库" FontSize="11" HorizontalAlignment="Center" Foreground="#666666" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <ScrollViewer Name="ManagementContent" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" IsVisible="False">
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Border Classes="ribbon-group">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button Classes="ribbon-large" Height="70">
+                                        <StackPanel>
+                                            <TextBlock Text="⚙️" FontSize="24" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="系统管理" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                                <TextBlock Text="平台管理" FontSize="11" HorizontalAlignment="Center" Foreground="#666666" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <ScrollViewer Name="HelpContent" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" IsVisible="False">
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Border Classes="ribbon-group">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button Classes="ribbon-large" Command="{Binding AboutCommand}" Height="70">
+                                        <StackPanel>
+                                            <TextBlock Text="❓" FontSize="24" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="关于" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                                <TextBlock Text="帮助" FontSize="11" HorizontalAlignment="Center" Foreground="#666666" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+        </Border>
+
+        <!-- Global Menu Popup -->
+        <Popup Name="GlobalMenuPopup" IsLightDismissEnabled="True" PlacementTarget="{Binding ElementName=GlobalMenuButton}" Placement="BottomEdgeAlignedLeft">
+            <Border Background="White" BorderBrush="#ACACAC" BorderThickness="1" CornerRadius="3" MinWidth="200">
+                <StackPanel Margin="5">
+                    <Button Content="新建" Command="{Binding NewCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="2"/>
+                    <Button Content="打开" Command="{Binding OpenCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="2"/>
+                    <Button Content="保存" Command="{Binding SaveCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="2"/>
+                    <Separator Margin="2"/>
+                    <Button Content="选项" Command="{Binding OptionsCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="2"/>
+                    <Separator Margin="2"/>
+                    <Button Content="退出" Command="{Binding ExitCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="2"/>
+                </StackPanel>
+            </Border>
+        </Popup>
+    </Grid>
+
+</UserControl>
