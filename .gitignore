@@ -1,6 +1,10 @@
 ## .NET Core ##
 # Build results
 .DS_Store
+
+# Logs
+Logs/
+*.log
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/

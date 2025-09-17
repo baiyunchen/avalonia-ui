@@ -5,11 +5,13 @@ using System.Reactive.Linq;
 using ReactiveUI;
 using Avalonia.Threading;
 using Sysware.UI.Models;
+using Sysware.Core.Services;
 
 namespace Sysware.UI.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
+    private readonly ILoggerService _logger;
     private int _clickCount;
     private string _currentTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
     private string _platformInfo = Environment.OSVersion.ToString();
@@ -82,28 +84,209 @@ public class MainWindowViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> OptionsCommand { get; }
     public ReactiveCommand<Unit, Unit> AboutCommand { get; }
 
-    public MainWindowViewModel()
+    public MainWindowViewModel(ILoggerService logger)
     {
+        _logger = logger;
+        _logger.LogInformation("MainWindowViewModel 初始化开始");
+
         // 初始化导航项
         InitializeNavigationItems();
 
-        // 初始化命令
-        ClickCommand = ReactiveCommand.Create<Unit, Unit>(_ => { ClickCount++; return Unit.Default; });
-        ResetCommand = ReactiveCommand.Create<Unit, Unit>(_ => { ClickCount = 0; return Unit.Default; });
+        // 初始化命令 - 确保在 UI 线程上执行
+        ClickCommand = ReactiveCommand.Create<Unit, Unit>(_ => 
+        { 
+            try
+            {
+                ClickCount++;
+                _logger.LogInformation("点击计数增加到 {ClickCount}", ClickCount);
+                return Unit.Default;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "执行点击命令时发生异常");
+                throw;
+            }
+        }, outputScheduler: RxApp.MainThreadScheduler);
         
-        NewCommand = ReactiveCommand.Create<Unit, Unit>(_ => { ContentTitle = "新建文件"; return Unit.Default; });
-        OpenCommand = ReactiveCommand.Create<Unit, Unit>(_ => { ContentTitle = "打开文件"; return Unit.Default; });
-        SaveCommand = ReactiveCommand.Create<Unit, Unit>(_ => { ContentTitle = "保存文件"; return Unit.Default; });
-        ExitCommand = ReactiveCommand.Create<Unit, Unit>(_ => { Environment.Exit(0); return Unit.Default; });
+        ResetCommand = ReactiveCommand.Create<Unit, Unit>(_ => 
+        { 
+            try
+            {
+                _logger.LogInformation("重置点击计数");
+                ClickCount = 0; 
+                return Unit.Default;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "执行重置命令时发生异常");
+                throw;
+            }
+        }, outputScheduler: RxApp.MainThreadScheduler);
         
-        UndoCommand = ReactiveCommand.Create<Unit, Unit>(_ => { ContentTitle = "撤销操作"; return Unit.Default; });
-        RedoCommand = ReactiveCommand.Create<Unit, Unit>(_ => { ContentTitle = "重做操作"; return Unit.Default; });
-        CutCommand = ReactiveCommand.Create<Unit, Unit>(_ => { ContentTitle = "剪切操作"; return Unit.Default; });
-        CopyCommand = ReactiveCommand.Create<Unit, Unit>(_ => { ContentTitle = "复制操作"; return Unit.Default; });
-        PasteCommand = ReactiveCommand.Create<Unit, Unit>(_ => { ContentTitle = "粘贴操作"; return Unit.Default; });
+        NewCommand = ReactiveCommand.Create<Unit, Unit>(_ => 
+        { 
+            try
+            {
+                _logger.LogInformation("执行新建文件命令");
+                ContentTitle = "新建文件"; 
+                return Unit.Default;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "执行新建文件命令时发生异常");
+                throw;
+            }
+        }, outputScheduler: RxApp.MainThreadScheduler);
         
-        OptionsCommand = ReactiveCommand.Create<Unit, Unit>(_ => { ContentTitle = "选项设置"; return Unit.Default; });
-        AboutCommand = ReactiveCommand.Create<Unit, Unit>(_ => { ContentTitle = "关于 Sysware.ModSim"; return Unit.Default; });
+        OpenCommand = ReactiveCommand.Create<Unit, Unit>(_ => 
+        { 
+            try
+            {
+                _logger.LogInformation("执行打开文件命令");
+                ContentTitle = "打开文件"; 
+                return Unit.Default;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "执行打开文件命令时发生异常");
+                throw;
+            }
+        }, outputScheduler: RxApp.MainThreadScheduler);
+        
+        SaveCommand = ReactiveCommand.Create<Unit, Unit>(_ => 
+        { 
+            try
+            {
+                _logger.LogInformation("执行保存文件命令");
+                ContentTitle = "保存文件"; 
+                return Unit.Default;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "执行保存文件命令时发生异常");
+                throw;
+            }
+        }, outputScheduler: RxApp.MainThreadScheduler);
+        
+        ExitCommand = ReactiveCommand.Create<Unit, Unit>(_ => 
+        { 
+            try
+            {
+                _logger.LogInformation("执行退出应用程序命令");
+                Environment.Exit(0); 
+                return Unit.Default;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "执行退出命令时发生异常");
+                throw;
+            }
+        }, outputScheduler: RxApp.MainThreadScheduler);
+        
+        UndoCommand = ReactiveCommand.Create<Unit, Unit>(_ => 
+        { 
+            try
+            {
+                _logger.LogInformation("执行撤销操作命令");
+                ContentTitle = "撤销操作"; 
+                return Unit.Default;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "执行撤销命令时发生异常");
+                throw;
+            }
+        }, outputScheduler: RxApp.MainThreadScheduler);
+        
+        RedoCommand = ReactiveCommand.Create<Unit, Unit>(_ => 
+        { 
+            try
+            {
+                _logger.LogInformation("执行重做操作命令");
+                ContentTitle = "重做操作"; 
+                return Unit.Default;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "执行重做命令时发生异常");
+                throw;
+            }
+        }, outputScheduler: RxApp.MainThreadScheduler);
+        
+        CutCommand = ReactiveCommand.Create<Unit, Unit>(_ => 
+        { 
+            try
+            {
+                _logger.LogInformation("执行剪切操作命令");
+                ContentTitle = "剪切操作"; 
+                return Unit.Default;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "执行剪切命令时发生异常");
+                throw;
+            }
+        }, outputScheduler: RxApp.MainThreadScheduler);
+        
+        CopyCommand = ReactiveCommand.Create<Unit, Unit>(_ => 
+        { 
+            try
+            {
+                _logger.LogInformation("执行复制操作命令");
+                ContentTitle = "复制操作"; 
+                return Unit.Default;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "执行复制命令时发生异常");
+                throw;
+            }
+        }, outputScheduler: RxApp.MainThreadScheduler);
+        
+        PasteCommand = ReactiveCommand.Create<Unit, Unit>(_ => 
+        { 
+            try
+            {
+                _logger.LogInformation("执行粘贴操作命令");
+                ContentTitle = "粘贴操作"; 
+                return Unit.Default;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "执行粘贴命令时发生异常");
+                throw;
+            }
+        }, outputScheduler: RxApp.MainThreadScheduler);
+        
+        OptionsCommand = ReactiveCommand.Create<Unit, Unit>(_ => 
+        { 
+            try
+            {
+                _logger.LogInformation("执行选项设置命令");
+                ContentTitle = "选项设置"; 
+                return Unit.Default;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "执行选项设置命令时发生异常");
+                throw;
+            }
+        }, outputScheduler: RxApp.MainThreadScheduler);
+        
+        AboutCommand = ReactiveCommand.Create<Unit, Unit>(_ => 
+        { 
+            try
+            {
+                _logger.LogInformation("执行关于命令");
+                ContentTitle = "关于 Sysware.ModSim"; 
+                return Unit.Default;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "执行关于命令时发生异常");
+                throw;
+            }
+        }, outputScheduler: RxApp.MainThreadScheduler);
 
         // 每秒更新时间
         var timer = Observable.Interval(TimeSpan.FromSeconds(1))
@@ -112,6 +295,8 @@ public class MainWindowViewModel : ViewModelBase
             {
                 CurrentTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             });
+
+        _logger.LogInformation("MainWindowViewModel 初始化完成");
     }
 
     private void InitializeNavigationItems()
