@@ -313,10 +313,29 @@
                         <Border Classes="ribbon-group">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <Button Classes="ribbon-large" Height="70">
+                                    <Button Classes="ribbon-large" Height="70" Click="LogManagementButton_Click">
+                                        <StackPanel>
+                                            <svg:Svg Width="24" Height="24" HorizontalAlignment="Center" 
+                                                     Path="avares://Sysware.UI/Assets/Icons/log.svg"/>
+                                            <TextBlock Text="日志管理" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Classes="ribbon-large" Height="70" Margin="5,0,0,0">
                                         <StackPanel>
                                             <TextBlock Text="⚙️" FontSize="24" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="系统管理" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                            <TextBlock Text="系统设置" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Classes="ribbon-large" Height="70" Margin="5,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="👥" FontSize="24" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="用户管理" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Classes="ribbon-large" Height="70" Margin="5,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="🔐" FontSize="24" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="权限管理" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>

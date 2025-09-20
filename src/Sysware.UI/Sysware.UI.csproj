@@ -33,4 +33,11 @@
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Views\PlatformManagement\Log\LogManagementView.axaml.cs">
+      <DependentUpon>LogManagementView.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>

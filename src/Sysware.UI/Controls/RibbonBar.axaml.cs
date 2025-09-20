@@ -5,6 +5,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using System.Collections.Generic;
 using System.Linq;
+using Sysware.UI.ViewModels;
 
 namespace Sysware.UI.Controls
 {
@@ -96,6 +97,23 @@ namespace Sysware.UI.Controls
             if (popup != null)
             {
                 popup.IsOpen = !popup.IsOpen;
+            }
+        }
+
+        private void LogManagementButton_Click(object? sender, RoutedEventArgs e)
+        {
+            // 获取MainWindow的DataContext
+            if (DataContext is MainWindowViewModel viewModel)
+            {
+                // 创建一个模拟的导航项来触发导航
+                var logManagementItem = new Models.NavigationItem 
+                { 
+                    Name = "日志管理", 
+                    Id = "LogManagement" 
+                };
+                
+                // 设置选中的导航项以触发导航
+                viewModel.SelectedNavigationItem = logManagementItem;
             }
         }
     }

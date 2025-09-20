@@ -20,6 +20,7 @@ public class MainWindowViewModel : ViewModelBase
     private bool _showStatusBar = true;
     private NavigationItem? _selectedNavigationItem;
     private List<NavigationItem> _navigationItems = new();
+    private object? _currentContent;
 
     public int ClickCount
     {
@@ -60,7 +61,20 @@ public class MainWindowViewModel : ViewModelBase
     public NavigationItem? SelectedNavigationItem
     {
         get => _selectedNavigationItem;
-        set => this.RaiseAndSetIfChanged(ref _selectedNavigationItem, value);
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedNavigationItem, value);
+            if (value != null)
+            {
+                HandleNavigationSelection(value);
+            }
+        }
+    }
+
+    public object? CurrentContent
+    {
+        get => _currentContent;
+        set => this.RaiseAndSetIfChanged(ref _currentContent, value);
     }
 
     public List<NavigationItem> NavigationItems
@@ -347,7 +361,43 @@ public class MainWindowViewModel : ViewModelBase
                     new NavigationItem { Name = "进阶示例", Icon = "🎯" },
                     new NavigationItem { Name = "项目模板", Icon = "📁" }
                 }
+            },
+            new NavigationItem 
+            { 
+                Name = "平台管理", 
+                Icon = "⚙️",
+                Children = new List<NavigationItem>
+                {
+                    new NavigationItem { Name = "日志管理", Icon = "📋", Id = "LogManagement" },
+                    new NavigationItem { Name = "系统设置", Icon = "🔧" },
+                    new NavigationItem { Name = "用户管理", Icon = "👥" },
+                    new NavigationItem { Name = "权限管理", Icon = "🔐" }
+                }
             }
         };
+    }
+
+    private void HandleNavigationSelection(NavigationItem navigationItem)
+    {
+        if (string.IsNullOrEmpty(navigationItem.Id))
+        {
+            // 如果没有ID，只更新标题
+            ContentTitle = navigationItem.Name;
+            CurrentContent = null;
+            return;
+        }
+
+        switch (navigationItem.Id)
+        {
+            case "LogManagement":
+                ContentTitle = "日志管理";
+                var logManagementViewModel = new LogManagementViewModel(_logger);
+                CurrentContent = new Views.LogManagementView(logManagementViewModel);
+                break;
+            default:
+                ContentTitle = navigationItem.Name;
+                CurrentContent = null;
+                break;
+        }
     }
 }

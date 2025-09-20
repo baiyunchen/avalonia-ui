@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using Sysware.Core.Models;
 
 namespace Sysware.Core.Services;
 
@@ -49,4 +50,26 @@ public interface ILoggerService
     /// <param name="message">消息</param>
     /// <param name="args">参数</param>
     void LogTrace(string message, params object[] args);
+
+    /// <summary>
+    /// 获取指定日期的日志条目
+    /// </summary>
+    /// <param name="date">日期</param>
+    /// <returns>日志条目列表</returns>
+    Task<List<LogEntry>> GetLogEntriesAsync(DateTime date);
+
+    /// <summary>
+    /// 搜索指定日期的日志条目
+    /// </summary>
+    /// <param name="date">日期</param>
+    /// <param name="searchText">搜索文本</param>
+    /// <param name="logLevel">日志级别过滤</param>
+    /// <returns>匹配的日志条目列表</returns>
+    Task<List<LogEntry>> SearchLogEntriesAsync(DateTime date, string searchText, Models.LogLevel? logLevel = null);
+
+    /// <summary>
+    /// 获取可用的日志日期列表
+    /// </summary>
+    /// <returns>日期列表</returns>
+    Task<List<DateTime>> GetAvailableLogDatesAsync();
 }
