@@ -76,6 +76,7 @@ class Program
         // 注册 ViewModels
         services.AddTransient<MainWindowViewModel>();
         services.AddTransient<StatusBarViewModel>();
+        services.AddTransient<LogManagementViewModel>();
         
         ServiceProvider = services.BuildServiceProvider();
         

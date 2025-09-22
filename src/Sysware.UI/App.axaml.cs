@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Sysware.UI.ViewModels;
 using Sysware.UI.Views;
 using Sysware.UI.Services;
+using Sysware.UI.Configuration;
 
 namespace Sysware.UI;
 
@@ -21,14 +22,11 @@ public partial class App : Application
         {
             // 从 Program.cs 中配置的 ServiceProvider 获取服务
             var mainWindowViewModel = Program.ServiceProvider.GetService<MainWindowViewModel>();
-            // 注册导航路由
-            var nav = Program.ServiceProvider.GetRequiredService<INavigationService>();
-            nav.Register("LogManagement", () =>
-            {
-                var logger = Program.ServiceProvider.GetRequiredService<Sysware.Core.Services.ILoggerService>();
-                var vm = new LogManagementViewModel(logger);
-                return new LogManagementView(vm);
-            }, title: "日志管理");
+            
+            // 配置所有路由
+            var navigationService = Program.ServiceProvider.GetRequiredService<INavigationService>();
+            RouteConfiguration.ConfigureRoutes(navigationService, Program.ServiceProvider);
+            
             desktop.MainWindow = new MainWindow
             {
                 DataContext = mainWindowViewModel

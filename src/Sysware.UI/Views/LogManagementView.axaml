@@ -20,7 +20,6 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
             <Button Content="搜索" Command="{Binding SearchCommand}" Margin="0,0,6,0" Background="#2196F3" Foreground="White"/>
-            <Button Content="清除" Command="{Binding ClearSearchCommand}" Margin="0,0,6,0"/>
             <Button Content="刷新" Command="{Binding RefreshCommand}" Margin="0,0,6,0"/>
         </WrapPanel>
 

@@ -43,7 +43,6 @@ public class LogManagementViewModel : ViewModelBase
         LoadLogsCommand = ReactiveCommand.CreateFromTask(LoadLogsAsync, outputScheduler: RxApp.MainThreadScheduler);
         SearchCommand = ReactiveCommand.CreateFromTask(SearchLogsAsync, outputScheduler: RxApp.MainThreadScheduler);
         RefreshCommand = ReactiveCommand.CreateFromTask(RefreshAsync, outputScheduler: RxApp.MainThreadScheduler);
-        ClearSearchCommand = ReactiveCommand.Create(ClearSearch, outputScheduler: RxApp.MainThreadScheduler);
 
         // 设置属性变化监听
         this.WhenAnyValue(x => x.SelectedDate)
@@ -204,11 +203,6 @@ public class LogManagementViewModel : ViewModelBase
     /// 刷新命令
     /// </summary>
     public ReactiveCommand<Unit, Unit> RefreshCommand { get; }
-
-    /// <summary>
-    /// 清除搜索命令
-    /// </summary>
-    public ReactiveCommand<Unit, Unit> ClearSearchCommand { get; }
 
     #endregion
 
