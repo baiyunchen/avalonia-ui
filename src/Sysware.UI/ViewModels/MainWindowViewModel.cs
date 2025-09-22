@@ -6,6 +6,7 @@ using ReactiveUI;
 using Avalonia.Threading;
 using Sysware.UI.Models;
 using Sysware.Core.Services;
+using Sysware.UI.Services;
 
 namespace Sysware.UI.ViewModels;
 
@@ -21,6 +22,7 @@ public class MainWindowViewModel : ViewModelBase
     private NavigationItem? _selectedNavigationItem;
     private List<NavigationItem> _navigationItems = new();
     private object? _currentContent;
+    private StatusBarViewModel _statusBar = null!;
 
     public int ClickCount
     {
@@ -77,6 +79,12 @@ public class MainWindowViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _currentContent, value);
     }
 
+    public StatusBarViewModel StatusBar
+    {
+        get => _statusBar;
+        set => this.RaiseAndSetIfChanged(ref _statusBar, value);
+    }
+
     public List<NavigationItem> NavigationItems
     {
         get => _navigationItems;
@@ -98,10 +106,16 @@ public class MainWindowViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> OptionsCommand { get; }
     public ReactiveCommand<Unit, Unit> AboutCommand { get; }
 
-    public MainWindowViewModel(ILoggerService logger)
+    private readonly INavigationService _navigationService;
+    private readonly IStatusBarManager _statusBarManager;
+
+    public MainWindowViewModel(ILoggerService logger, INavigationService navigationService, IStatusBarManager statusBarManager)
     {
         _logger = logger;
+        _navigationService = navigationService;
+        _statusBarManager = statusBarManager;
         _logger.LogInformation("MainWindowViewModel 初始化开始");
+        _statusBar = new StatusBarViewModel(_statusBarManager);
 
         // 初始化导航项
         InitializeNavigationItems();
@@ -310,6 +324,19 @@ public class MainWindowViewModel : ViewModelBase
                 CurrentTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             });
 
+        // 订阅导航事件，更新内容与标题，并记录日志与状态栏
+        _navigationService.Navigating += (_, e) =>
+        {
+            _logger.LogInformation("导航至 {Route}", e.RouteKey);
+            _statusBarManager.Text = $"正在导航: {e.Title ?? e.RouteKey}";
+        };
+        _navigationService.Navigated += (_, e) =>
+        {
+            ContentTitle = e.Title ?? e.RouteKey;
+            CurrentContent = e.Content;
+            _statusBarManager.Text = $"已导航: {ContentTitle}";
+        };
+
         _logger.LogInformation("MainWindowViewModel 初始化完成");
     }
 
@@ -387,12 +414,11 @@ public class MainWindowViewModel : ViewModelBase
             return;
         }
 
+        // 通过导航服务进行导航
         switch (navigationItem.Id)
         {
             case "LogManagement":
-                ContentTitle = "日志管理";
-                var logManagementViewModel = new LogManagementViewModel(_logger);
-                CurrentContent = new Views.LogManagementView(logManagementViewModel);
+                _navigationService.Navigate("LogManagement", mode: NavigationMode.Replace);
                 break;
             default:
                 ContentTitle = navigationItem.Name;

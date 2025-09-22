@@ -39,21 +39,22 @@ public class LogManagementViewModel : ViewModelBase
         // 设置默认日期为今天
         _selectedDate = DateTime.Today;
 
-        // 初始化命令
-        LoadLogsCommand = ReactiveCommand.CreateFromTask(LoadLogsAsync);
-        SearchCommand = ReactiveCommand.CreateFromTask(SearchLogsAsync);
-        RefreshCommand = ReactiveCommand.CreateFromTask(RefreshAsync);
-        ClearSearchCommand = ReactiveCommand.Create(ClearSearch);
-        ExportLogsCommand = ReactiveCommand.CreateFromTask(ExportLogsAsync);
+        // 初始化命令（在 UI 线程调度输出与 CanExecute 变化）
+        LoadLogsCommand = ReactiveCommand.CreateFromTask(LoadLogsAsync, outputScheduler: RxApp.MainThreadScheduler);
+        SearchCommand = ReactiveCommand.CreateFromTask(SearchLogsAsync, outputScheduler: RxApp.MainThreadScheduler);
+        RefreshCommand = ReactiveCommand.CreateFromTask(RefreshAsync, outputScheduler: RxApp.MainThreadScheduler);
+        ClearSearchCommand = ReactiveCommand.Create(ClearSearch, outputScheduler: RxApp.MainThreadScheduler);
 
         // 设置属性变化监听
         this.WhenAnyValue(x => x.SelectedDate)
             .Where(date => date.HasValue)
+            .ObserveOn(RxApp.MainThreadScheduler)
             .Subscribe(_ => LoadLogsCommand.Execute().Subscribe());
 
         this.WhenAnyValue(x => x.SearchText, x => x.SelectedLogLevel)
-            .Throttle(TimeSpan.FromMilliseconds(500))
+            .Throttle(TimeSpan.FromMilliseconds(500), RxApp.MainThreadScheduler)
             .Where(_ => !IsLoading)
+            .ObserveOn(RxApp.MainThreadScheduler)
             .Subscribe(_ => SearchCommand.Execute().Subscribe());
 
         // 自动刷新
@@ -209,11 +210,6 @@ public class LogManagementViewModel : ViewModelBase
     /// </summary>
     public ReactiveCommand<Unit, Unit> ClearSearchCommand { get; }
 
-    /// <summary>
-    /// 导出日志命令
-    /// </summary>
-    public ReactiveCommand<Unit, Unit> ExportLogsCommand { get; }
-
     #endregion
 
     #region 方法
@@ -247,7 +243,7 @@ public class LogManagementViewModel : ViewModelBase
         {
             if (!SelectedDate.HasValue) return;
 
-            var logs = await _loggerService.GetLogEntriesAsync(SelectedDate.Value.Date);
+            var logs = await _loggerService.GetLogEntriesAsync(SelectedDate.Value);
 
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
@@ -277,7 +273,7 @@ public class LogManagementViewModel : ViewModelBase
         {
             if (!SelectedDate.HasValue) return;
 
-            var logs = await _loggerService.SearchLogEntriesAsync(SelectedDate.Value.Date, SearchText, SelectedLogLevel);
+            var logs = await _loggerService.SearchLogEntriesAsync(SelectedDate.Value, SearchText, SelectedLogLevel);
 
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
@@ -317,6 +313,7 @@ public class LogManagementViewModel : ViewModelBase
         {
             // TODO: 实现导出功能
             _loggerService.LogInformation("导出日志功能待实现");
+            await Task.CompletedTask;
         }
         catch (Exception ex)
         {

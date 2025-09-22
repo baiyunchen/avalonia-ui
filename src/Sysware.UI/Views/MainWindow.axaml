@@ -29,7 +29,7 @@
         </Grid>
 
         <!-- 底部状态栏 -->
-        <controls:StatusBar Grid.Row="2" DataContext="{Binding}"/>
+        <controls:StatusBar Grid.Row="2" DataContext="{Binding StatusBar}"/>
     </Grid>
 
 </Window>

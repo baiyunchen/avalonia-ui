@@ -2,21 +2,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:Sysware.UI.ViewModels"
              x:Class="Sysware.UI.Controls.StatusBar"
-             x:DataType="vm:MainWindowViewModel">
-    
+             x:DataType="vm:StatusBarViewModel">
+   
     <Border Background="#E5E5E5" 
             BorderBrush="#CCCCCC" 
             BorderThickness="0,1,0,0"
             Padding="10,5">
-        <Grid ColumnDefinitions="*,Auto">
-            <TextBlock Grid.Column="0" 
-                       Text="准备就绪" 
-                       FontSize="12" 
-                       Foreground="Gray"/>
+        <Grid ColumnDefinitions="Auto,*,Auto">
+            <ProgressBar Grid.Column="0" Width="120" Height="12" IsIndeterminate="{Binding IsBusy}"
+                         Minimum="0" Maximum="100" Value="{Binding ProgressValue}"/>
             <TextBlock Grid.Column="1" 
-                       Text="{Binding CurrentTime}" 
+                       Text="{Binding Text}" 
                        FontSize="12" 
-                       Foreground="Gray"/>
+                       Foreground="Gray"
+                       Margin="10,0,0,0"/>
+            <TextBlock Grid.Column="2" 
+                       Text="{Binding CurrentTime}"
+                       FontSize="12" 
+                       Foreground="Gray"
+                       Margin="10,0,0,0"/>
         </Grid>
     </Border>
     

@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.ReactiveUI;
 using System;
 using System.Globalization;
 using System.Threading;
@@ -10,6 +11,7 @@ using Serilog.Extensions.Logging;
 using Sysware.Core.Configuration;
 using Sysware.Core.Services;
 using Sysware.UI.ViewModels;
+using Sysware.UI.Services;
 
 namespace Sysware.UI;
 
@@ -68,9 +70,12 @@ class Program
         
         // 注册业务服务
         services.AddSingleton<ILoggerService, LoggerService>();
+        services.AddSingleton<IStatusBarManager, StatusBarManager>();
+        services.AddSingleton<INavigationService, NavigationService>();
         
         // 注册 ViewModels
         services.AddTransient<MainWindowViewModel>();
+        services.AddTransient<StatusBarViewModel>();
         
         ServiceProvider = services.BuildServiceProvider();
         
@@ -98,6 +103,7 @@ class Program
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .WithInterFont()
+            .UseReactiveUI()
             .LogToTrace();
 }
 
