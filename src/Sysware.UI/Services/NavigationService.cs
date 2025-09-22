@@ -4,22 +4,50 @@ using Avalonia.Threading;
 
 namespace Sysware.UI.Services;
 
+/// <summary>
+/// 默认的页面导航服务实现。
+/// - 通过路由键与内容工厂方法建立映射
+/// - 支持 Push/Replace 导航模式
+/// - 维护后退/前进栈
+/// - 触发 Navigating/Navigated 事件（在 UI 线程）
+/// </summary>
 public sealed class NavigationService : INavigationService
 {
+    /// <summary>
+    /// 路由键到页面内容工厂方法的映射。
+    /// </summary>
     private readonly Dictionary<string, Func<object>> _routeToFactory = new();
+
+    /// <summary>
+    /// 后退栈，保存之前访问过的页面信息。
+    /// </summary>
     private readonly Stack<(string RouteKey, object Content, string? Title)> _backStack = new();
+
+    /// <summary>
+    /// 前进栈，配合后退使用以支持前进功能。
+    /// </summary>
     private readonly Stack<(string RouteKey, object Content, string? Title)> _forwardStack = new();
+
+    /// <summary>
+    /// 当前页面信息。
+    /// </summary>
     private (string RouteKey, object Content, string? Title)? _current;
 
+    /// <inheritdoc />
     public event EventHandler<NavigationEventArgs>? Navigating;
+
+    /// <inheritdoc />
     public event EventHandler<NavigationEventArgs>? Navigated;
 
+    /// <inheritdoc />
     public void Register(string routeKey, Func<object> contentFactory, string? title = null)
     {
         if (string.IsNullOrWhiteSpace(routeKey)) throw new ArgumentException("routeKey 不能为空", nameof(routeKey));
         _routeToFactory[routeKey] = contentFactory ?? throw new ArgumentNullException(nameof(contentFactory));
+        // 注：当前实现未记录 title，仅保留参数以便将来扩展（例如用于显示友好名称）。
     }
 
+    /// <inheritdoc />
     public void Navigate(string routeKey, object? parameter = null, NavigationMode mode = NavigationMode.Push)
     {
         if (!_routeToFactory.TryGetValue(routeKey, out var factory))
@@ -28,7 +56,7 @@ public sealed class NavigationService : INavigationService
         }
 
         var content = factory();
-        var title = routeKey; // 默认使用 key 作为标题，具体标题由 VM 再决定
+        var title = routeKey; // 默认使用路由键作为标题，可在外层 ViewModel 再行决定最终标题
 
         if (mode == NavigationMode.Push && _current.HasValue)
         {
@@ -59,9 +87,13 @@ public sealed class NavigationService : INavigationService
         }
     }
 
+    /// <inheritdoc />
     public bool CanGoBack => _backStack.Count > 0;
+
+    /// <inheritdoc />
     public bool CanGoForward => _forwardStack.Count > 0;
 
+    /// <inheritdoc />
     public void GoBack()
     {
         if (!CanGoBack) return;
@@ -92,6 +124,7 @@ public sealed class NavigationService : INavigationService
         }
     }
 
+    /// <inheritdoc />
     public void GoForward()
     {
         if (!CanGoForward) return;

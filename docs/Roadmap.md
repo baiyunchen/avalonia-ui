@@ -33,16 +33,16 @@
 
 #### 1.1 UI功能完善
 
-- [ ] 页面导航与状态栏封装
-  - [ ] 定义 `INavigationService` 接口与默认实现（支持推/替换/回退/前进）
-  - [ ] 统一的页面注册与路由表（按菜单/导航树映射）
-  - [ ] 基于 `ContentControl` 的区域导航（主内容区、对话框区）
-  - [ ] 导航生命周期钩子（OnNavigating/OnNavigated/OnLeaving）
-  - [ ] 支持参数传递与强类型导航
-  - [ ] 全局 `StatusBarManager` 封装（文本/进度/网络状态/消息）
-  - [ ] 在 ViewModel 中通过服务控制状态栏与加载动画
-  - [ ] 与日志系统集成，记录导航与状态变化
-  - [ ] 示例：从导航树/菜单触发页面切换的演示
+- [x] 页面导航与状态栏封装
+  - [x] 定义 `INavigationService` 接口与默认实现（支持推/替换/回退/前进）
+  - [x] 统一的页面注册与路由表（按菜单/导航树映射）
+  - [x] 基于 `ContentControl` 的区域导航（主内容区、对话框区）
+  - [x] 导航生命周期钩子（OnNavigating/OnNavigated/OnLeaving）
+  - [x] 支持参数传递与强类型导航
+  - [x] 全局 `StatusBarManager` 封装（文本/进度/网络状态/消息）
+  - [x] 在 ViewModel 中通过服务控制状态栏与加载动画
+  - [x] 与日志系统集成，记录导航与状态变化
+  - [x] 示例：从导航树/菜单触发页面切换的演示
 
 - [ ] UI 状态管理
   - [ ] 统一 Busy/Disabled 状态管理
