@@ -6,6 +6,7 @@ using Sysware.UI.ViewModels;
 using Sysware.UI.Views;
 using Sysware.UI.Services;
 using Sysware.UI.Configuration;
+using Sysware.Data;
 
 namespace Sysware.UI;
 
@@ -26,6 +27,10 @@ public partial class App : Application
             // 配置所有路由
             var navigationService = Program.ServiceProvider.GetRequiredService<INavigationService>();
             RouteConfiguration.ConfigureRoutes(navigationService, Program.ServiceProvider);
+            
+            // 初始化数据库
+            var dbInitializer = Program.ServiceProvider.GetRequiredService<IDatabaseInitializer>();
+            _ = dbInitializer.InitializeAsync();
             
             desktop.MainWindow = new MainWindow
             {

@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Extensions.Logging;
@@ -12,6 +13,8 @@ using Sysware.Core.Configuration;
 using Sysware.Core.Services;
 using Sysware.UI.ViewModels;
 using Sysware.UI.Services;
+using Sysware.Data.Extensions;
+using Sysware.Data;
 
 namespace Sysware.UI;
 
@@ -61,17 +64,24 @@ class Program
     private static void ConfigureServices()
     {
         var services = new ServiceCollection();
+        var configuration = BuildConfiguration();
         
         // 添加日志服务
         services.AddLogging(builder =>
         {
             builder.AddSerilog(dispose: true);
         });
+
+        // 注册配置对象
+        services.AddSingleton<IConfiguration>(configuration);
         
         // 注册业务服务
         services.AddSingleton<ILoggerService, LoggerService>();
         services.AddSingleton<IStatusBarManager, StatusBarManager>();
         services.AddSingleton<INavigationService, NavigationService>();
+        
+        // 注册数据层（SqlSugar、仓储、初始化器）
+        services.AddDataLayer(configuration);
         
         // 注册 ViewModels
         services.AddTransient<MainWindowViewModel>();
@@ -81,6 +91,15 @@ class Program
         ServiceProvider = services.BuildServiceProvider();
         
         Log.Information("依赖注入服务配置完成");
+    }
+
+    private static IConfiguration BuildConfiguration()
+    {
+        var builder = new ConfigurationBuilder()
+            .SetBasePath(AppContext.BaseDirectory)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddEnvironmentVariables();
+        return builder.Build();
     }
 
     private static void SetupGlobalExceptionHandling()
