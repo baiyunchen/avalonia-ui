@@ -24,3 +24,4 @@ public partial class LogManagementView : UserControl
 }
 
 
+
